@@ -47,9 +47,11 @@ export class Database {
         ...data,
         updated_at: new Date(),
       };
+
+      this.#persist();
     }
 
-    this.#persist();
+    return rowIndex;
   }
 
   patch(table, id, data) {
@@ -59,9 +61,11 @@ export class Database {
       for (const key in data) {
         this.#database[table][rowIndex][key] = data[key];
       }
+
+      this.#persist();
     }
 
-    this.#persist();
+    return rowIndex;
   }
 
   delete(table, id) {
@@ -69,8 +73,10 @@ export class Database {
 
     if (rowIndex > -1) {
       this.#database[table].splice(rowIndex, 1);
+
+      this.#persist();
     }
 
-    this.#persist();
+    return rowIndex;
   }
 }
