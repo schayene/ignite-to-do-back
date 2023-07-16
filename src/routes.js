@@ -32,7 +32,7 @@ export const routes = [
         description,
       });
 
-      return response.writeHead(204).end("Tarefa alterada com sucesso!");
+      return response.end("Tarefa alterada com sucesso!");
     },
   },
   {
@@ -45,14 +45,18 @@ export const routes = [
         completed_at: new Date(),
       });
 
-      return response.writeHead(204).end("Tarefa completada com sucesso!");
+      return response.end("Tarefa completada com sucesso!");
     },
   },
   {
     method: "DELETE",
     path: buildRoutePath("/tasks/:id"),
     handler(request, response) {
-      return response.writeHead(204).end("Tarefa deletada com sucesso!");
+      const { id } = request.params;
+
+      database.delete("tasks", id);
+
+      return response.end("Tarefa deletada com sucesso!");
     },
   },
 ];
