@@ -1,5 +1,6 @@
 import { Database } from "./database/index.js";
 import { buildRoutePath } from "./utils/build-route-path.js";
+import { validator } from "./utils/validator/index.js";
 
 const database = new Database();
 
@@ -15,7 +16,21 @@ export const routes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler(request, response) {
-      database.insert("tasks", request.body);
+      let { error, message } = validator(
+        ["title", "description"],
+        request.body
+      );
+
+      if (error) {
+        return response.end(message);
+      }
+
+      const { title, description } = request.body;
+
+      database.insert("tasks", {
+        title,
+        description,
+      });
 
       return response.writeHead(201).end("Tarefa criada com sucesso!");
     },
@@ -24,6 +39,15 @@ export const routes = [
     method: "PUT",
     path: buildRoutePath("/tasks/:id"),
     handler(request, response) {
+      let { error, message } = validator(
+        ["title", "description"],
+        request.body
+      );
+
+      if (error) {
+        return response.end(message);
+      }
+
       const { id } = request.params;
       const { title, description } = request.body;
 
